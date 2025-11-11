@@ -39,4 +39,9 @@ public class SentimentController {
         log.info("Fetching analysis history");
         return ResponseEntity.ok(sentimentService.getHistory());
     }
+
+    @GetMapping("/test-cache")
+    public String testCache(@RequestParam String text) {
+        return sentimentService.testCache(text);
+    }
 }

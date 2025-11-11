@@ -29,6 +29,10 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
 
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("redis.clients:jedis:5.1.0")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
