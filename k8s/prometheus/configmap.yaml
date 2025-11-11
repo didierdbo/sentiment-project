@@ -10,13 +10,31 @@ data:
       evaluation_interval: 15s
 
     scrape_configs:
-      # Scrape sentiment-api via service
+      # Scrape all sentiment-api pods individually
       - job_name: 'sentiment-api'
         metrics_path: '/actuator/prometheus'
-        static_configs:
-          - targets: ['sentiment-api-service:8080']
-            labels:
-              application: 'sentiment-api'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - sentiment-app
+        relabel_configs:
+          # Keep only pods with app=sentiment-api label
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: sentiment-api
+          # Use pod IP:8080 as target
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:8080
+          # Add pod name as label
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
+          # Add application label
+          - target_label: application
+            replacement: sentiment-api
     
       # Scrape Prometheus itself
       - job_name: 'prometheus'
