@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sentiment-api-ingress
+  namespace: sentiment-app
+  annotations:
+    # Traefik will handle this ingress
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: sentiment-api.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sentiment-api-service
+                port:
+                  number: 8080
