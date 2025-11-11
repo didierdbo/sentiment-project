@@ -1,8 +1,9 @@
 package com.sentiment.api.service;
 
 import com.sentiment.api.model.MLResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,25 @@ public class MLServiceClient {
     @Value("${ml.service.url}")
     private String mlServiceUrl;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final Counter mlServiceCallCounter;
+
+    // Constructor injection for all dependencies
+    public MLServiceClient(RestTemplate restTemplate, MeterRegistry meterRegistry) {
+        this.restTemplate = restTemplate;
+        this.mlServiceCallCounter = Counter.builder("ml_service_calls_total")
+                .description("Total number of ML service calls (cache misses)")
+                .tag("service", "sentiment-api")
+                .register(meterRegistry);
+    }
 
     @Cacheable(value = "ml-predictions")
     public MLResponse predict(String text) {
         log.info("=== CACHE MISS - Calling ML service for: {}",
                 text.substring(0, Math.min(20, text.length())));
+
+        // Increment counter on cache miss
+        mlServiceCallCounter.increment();
 
         Map<String, String> request = new HashMap<>();
         request.put("text", text);
