@@ -1,0 +1,109 @@
+{
+  "dashboard": {
+    "title": "Sentiment API Monitoring",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Requests per Second",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{application=\"sentiment-api\",uri=\"/api/v1/analyze\"}[1m]))",
+            "legendFormat": "RPS"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Average Response Time (seconds)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_sum{application=\"sentiment-api\",uri=\"/api/v1/analyze\"}[1m])) / sum(rate(http_server_requests_seconds_count{application=\"sentiment-api\",uri=\"/api/v1/analyze\"}[1m]))",
+            "legendFormat": "Avg Response Time"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "95th Percentile Response Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"sentiment-api\",uri=\"/api/v1/analyze\"}[5m])) by (le))",
+            "legendFormat": "p95"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "ML Service Calls (Cache Misses)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(ml_service_calls_total)",
+            "legendFormat": "Total Cache Misses"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "JVM Heap Memory Usage (MB)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(jvm_memory_used_bytes{application=\"sentiment-api\",area=\"heap\"}) / 1024 / 1024",
+            "legendFormat": "Heap Used (MB)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "HTTP Status Codes",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{application=\"sentiment-api\"}[1m])) by (status)",
+            "legendFormat": "{{status}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Database Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "hikaricp_connections_active{application=\"sentiment-api\"}",
+            "legendFormat": "Active Connections"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24}
+      },
+      {
+        "id": 8,
+        "title": "Cache Miss Rate (per minute)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(ml_service_calls_total[1m]))",
+            "legendFormat": "Cache Misses/min"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24}
+      }
+    ],
+    "refresh": "10s",
+    "time": {
+      "from": "now-15m",
+      "to": "now"
+    }
+  }
+}
