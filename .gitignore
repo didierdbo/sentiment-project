@@ -15,6 +15,11 @@ build/
 
 # IDE
 .idea/
+!.idea/runConfigurations/
+!.idea/compiler.xml
+!.idea/gradle.xml
+!.idea/misc.xml
+!.idea/.name
 .vscode/
 *.swp
 *.swo

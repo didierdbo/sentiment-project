@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
     jacoco
+    idea
 }
 
 group = "com.sentiment"
@@ -44,6 +45,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("com.h2database:h2")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {
@@ -77,5 +80,18 @@ tasks.jacocoTestCoverageVerification {
                 minimum = "0.80".toBigDecimal()
             }
         }
+    }
+}
+
+// IntelliJ IDEA configuration
+idea {
+    module {
+        // Enable annotation processing
+        isDownloadJavadoc = true
+        isDownloadSources = true
+
+        // Ensure test resources are recognized
+        testSourceDirs.addAll(files("src/test/java"))
+        testResourceDirs.addAll(files("src/test/resources"))
     }
 }
