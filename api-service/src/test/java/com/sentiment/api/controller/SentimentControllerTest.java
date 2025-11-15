@@ -8,9 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -29,7 +33,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Comprehensive test suite for SentimentController
  * Tests all endpoints, validation rules, error handling, and CORS configuration
  */
-@WebMvcTest(SentimentController.class)
+@WebMvcTest(
+    controllers = SentimentController.class,
+    excludeAutoConfiguration = {
+        RedisAutoConfiguration.class,
+        RedisRepositoriesAutoConfiguration.class
+    }
+)
+@Import(ControllerTestConfig.class)
+@ActiveProfiles("test")
 @DisplayName("SentimentController Tests")
 class SentimentControllerTest {
 
