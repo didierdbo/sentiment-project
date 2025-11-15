@@ -84,6 +84,26 @@ jacocoTestCoverageVerification {
     }
 }
 
+// Custom task to run all tests with coverage report
+tasks.register('allTests') {
+    group = 'verification'
+    description = 'Run all tests and generate coverage report'
+
+    dependsOn test
+    finalizedBy jacocoTestReport
+
+    doLast {
+        println ''
+        println '======================================'
+        println '  All tests completed successfully!'
+        println '======================================'
+        println ''
+        println "Coverage report: file://${project.buildDir}/reports/jacoco/test/html/index.html"
+        println "Test report: file://${project.buildDir}/reports/tests/test/index.html"
+        println ''
+    }
+}
+
 // IntelliJ IDEA configuration
 idea {
     module {

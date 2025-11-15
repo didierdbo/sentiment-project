@@ -1,0 +1,37 @@
+spring:
+  # Disable all data sources for controller unit tests
+  # These are not needed when testing only the web layer
+  datasource:
+    enabled: false
+  jpa:
+    enabled: false
+  data:
+    redis:
+      repositories:
+        enabled: false
+    jpa:
+      repositories:
+        enabled: false
+
+  # Completely disable caching for unit tests
+  cache:
+    type: none
+
+  # Exclude auto-configurations that require external services
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
+
+ml:
+  service:
+    url: http://localhost:8080
+
+logging:
+  level:
+    com.sentiment: DEBUG
+    org.springframework.boot.autoconfigure: DEBUG
