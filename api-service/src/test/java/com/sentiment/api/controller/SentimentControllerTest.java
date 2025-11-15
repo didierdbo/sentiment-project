@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -59,6 +60,9 @@ class SentimentControllerTest {
 
     @MockBean
     private SentimentService sentimentService;
+
+    @MockBean
+    private RestTemplate restTemplate;
 
     @Nested
     @DisplayName("Health Endpoint Tests")
