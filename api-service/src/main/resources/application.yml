@@ -49,3 +49,7 @@ server:
 ml:
   service:
     url: ${ML_SERVICE_URL:http://localhost:5000}
+
+logging:
+  level:
+    org.springframework.cache: DEBUG
