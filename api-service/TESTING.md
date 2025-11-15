@@ -198,10 +198,39 @@ The tests use H2 in-memory database. If you see H2 errors:
 
 ### Spring context fails to load
 
-1. Check all dependencies are downloaded: `./gradlew dependencies`
-2. Ensure `@WebMvcTest` annotation is present
-3. Verify test resources are in the correct location
-4. Check for conflicting Spring versions
+If you see errors like "ApplicationContext failure threshold exceeded" or Redis/Cache configuration errors:
+
+1. **Clean Gradle cache and rebuild**:
+   ```bash
+   ./gradlew clean
+   ./gradlew build --refresh-dependencies
+   ```
+
+2. **In IntelliJ, invalidate caches and restart**:
+   ```
+   File → Invalidate Caches → Check "Clear file system cache" → Invalidate and Restart
+   ```
+
+3. **Delete IntelliJ's out directory**:
+   ```bash
+   rm -rf api-service/out
+   rm -rf api-service/build
+   ```
+
+4. **Reimport Gradle project**:
+   ```
+   Right-click on api-service/build.gradle.kts → Reload Gradle Project
+   ```
+
+5. **Check test configuration**:
+   - Verify `@WebMvcTest` excludes Redis and Cache auto-configuration
+   - Verify `application-test.yml` has `cache.type: none`
+   - Ensure `@ActiveProfiles("test")` is present
+
+6. **If still failing, check for conflicting dependencies**:
+   ```bash
+   ./gradlew dependencies --configuration testRuntimeClasspath
+   ```
 
 ## CI/CD Integration
 
